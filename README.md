@@ -1,26 +1,46 @@
 # AR Reconciliation AI Assistant
 
-A small accounting-focused Python project for accounts receivable reconciliation, aging analysis, and AI-assisted exception notes.
+An accounting-focused Python project for accounts receivable reconciliation, aging analysis, exception prioritization, and AI-assisted review notes.
 
-This project is designed around a realistic junior accounting workflow:
+It is built around a realistic junior accountant workflow: import invoice and receipt exports, match items using transparent rules, surface risky exceptions, and export an Excel audit workbook for manual finance review.
 
-- compare invoice records with bank receipt records
-- identify matched, unmatched, and exception items
-- calculate aging buckets for unpaid invoices
-- export a reviewed Excel workbook
-- draft a concise AI-assisted follow-up memo for finance review
+## What It Does
 
-The AI feature is intentionally practical: it does not send private financial data to an external model. It prepares a structured exception memo and a safe prompt that can be reviewed before use.
+- Validates invoice and receipt CSV files for required columns, duplicate IDs, missing customers, invalid amounts, invalid dates, and missing receipt references.
+- Matches invoices to receipts using a rule engine:
+  - invoice reference and amount
+  - customer, amount, and configurable receipt-date window
+  - grouped receipts that add up to one invoice
+- Detects partial-payment candidates from same-customer unmatched receipts.
+- Calculates aging buckets and open AR exposure.
+- Builds a prioritized exception queue with risk score, priority, and recommended owner action.
+- Exports a multi-sheet Excel audit workbook.
+- Provides a Streamlit dashboard for non-technical review.
+- Generates an AI-assisted memo and safe prompt without sending private data anywhere.
+- Runs automated tests in GitHub Actions.
 
-## Features
+## Repository Structure
 
-- One-to-one matching by invoice reference, customer, and amount
-- Simple grouped matching for cases where one invoice is paid by multiple receipts
-- Aging buckets: not due, 0-30, 31-60, 61-90, and over 90 days
-- Excel report export with separate sheets for summary, matches, unpaid invoices, unmatched receipts, and AI notes
-- Streamlit interface for non-technical review
-- Command line workflow for repeatable processing
-- Sample invoice and receipt data included
+```text
+ar_reconciliation/
+  config.py        Business rule settings
+  validation.py    Source data checks and normalization
+  matching.py      Matching rule engine
+  risk.py          Aging, risk score, and owner action logic
+  core.py          Reconciliation orchestration
+  report.py        Excel audit workbook export
+  ai_notes.py      AI memo and safe prompt generation
+app.py             Streamlit dashboard
+data/              Sample invoice and receipt CSVs
+tests/             Pytest coverage
+docs/              Architecture notes
+```
+
+Useful docs:
+
+- [Architecture](docs/architecture.md)
+- [Data dictionary](docs/data_dictionary.md)
+- [Interview talking points](docs/interview_talking_points.md)
 
 ## Quick Start
 
@@ -30,7 +50,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run the Streamlit app:
+Run the dashboard:
 
 ```bash
 streamlit run app.py
@@ -39,7 +59,7 @@ streamlit run app.py
 Run the command line workflow:
 
 ```bash
-python -m ar_reconciliation.cli --invoices data/sample_invoices.csv --receipts data/sample_receipts.csv --output outputs/reconciliation_report.xlsx
+python -m ar_reconciliation.cli --invoices data/sample_invoices.csv --receipts data/sample_receipts.csv --output outputs/reconciliation_report.xlsx --as-of 2026-06-30
 ```
 
 Run tests:
@@ -62,14 +82,23 @@ Receipts:
 receipt_id,customer,receipt_date,amount,reference
 ```
 
-## Why This Project Matters
+## Excel Workbook Sheets
 
-For an accounting assistant or AR/AP role, the useful skill is not only knowing formulas. It is the ability to clean source data, compare business records, surface exceptions, and explain what needs follow-up.
+- `summary`
+- `matches`
+- `exception_queue`
+- `unmatched_invoices`
+- `unmatched_receipts`
+- `aging`
+- `data_quality`
+- `control_checklist`
+- `ai_notes`
 
-This project shows:
+## Why This Project Is Useful
 
-- accounting process awareness
-- Excel and data handling ability
-- basic automation thinking
-- careful use of AI as an assistant, with manual review for amounts and accounting judgement
+For accounting assistant, AR, AP, or junior accountant roles, the value is practical:
 
+- understand source documents and matching rules
+- maintain auditable Excel outputs
+- prioritize exceptions instead of only listing them
+- use AI carefully for draft explanations while keeping manual controls over amounts and accounting judgement
