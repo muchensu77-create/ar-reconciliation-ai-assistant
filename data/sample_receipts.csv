@@ -1,0 +1,9 @@
+receipt_id,customer,receipt_date,amount,reference
+RCPT-9001,Shanghai Fresh Retail,2026-03-28,12800.00,Payment for INV-1001
+RCPT-9002,East City Market,2026-04-03,8600.00,March settlement
+RCPT-9003,Blue River Foods,2026-05-01,10000.00,Part 1 INV-1003
+RCPT-9004,Blue River Foods,2026-05-03,5420.50,Part 2 INV-1003
+RCPT-9005,Sunrise Catering,2026-05-20,6000.00,Short payment
+RCPT-9006,North Star Trading,2026-06-10,9300.00,INV-1005
+RCPT-9007,Unknown Customer,2026-06-15,1200.00,Unidentified receipt
+
